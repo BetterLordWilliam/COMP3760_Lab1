@@ -3,11 +3,26 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+// Will Otterbein
+// A01372608
+// Set D
+
+/**
+ * JobAssignmentFinder: Computes maximum job assignment value from a job benefit matrix.
+ * 
+ * Brute force approach, generates all possible job assignment permutations and then calculates which one
+ * of the permutations yields the maximum value.
+ * 
+ * @author Will Otterbein, A01372608, Set D
+ * @version 2025-1
+ */
 public class JobAssignmentFinder {
     private int[][] benefitMatrix;
     private int benefitMatrixSize;
-    private ArrayList<Integer> jobAssignment;
-    
+    private ArrayList<ArrayList<Integer>> jobAssignmentPerms;
+    // private ArrayList<Integer> maxJobAssignmentPermutation = null;
+    // private Integer maxJobAsssignmentValue = null;
+
     /**
      * Recursive decrease-and-conquer algorithm to generate a list of all
      * permutations of the numbers 0..N-1. This follows the "decrease by 1" pattern
@@ -77,7 +92,7 @@ public class JobAssignmentFinder {
     }
 
     /**
-     * readDataFile:                reads matrix from a data file.
+     * readDataFile:                Reads a matrix from a data file.
      * 
      * @param dataFile
      * @throws FileNotFoundException
@@ -93,7 +108,7 @@ public class JobAssignmentFinder {
                 if (n == -1) {
                     benefitMatrixSize = Integer.parseInt(line);
                     benefitMatrix = new int[benefitMatrixSize][benefitMatrixSize];
-                // Parse the row of the matrix
+                // Parse the rows of the matrix
                 } else {
                     int m = 0;
                     String[] literals = line.split(" ");
@@ -104,6 +119,10 @@ public class JobAssignmentFinder {
                 }
                 n++;
             }
+            // Calculate permutations
+            jobAssignmentPerms = getPermutations(benefitMatrixSize);
+            // maxJobAssignmentPermutation = null;
+            // maxJobAsssignmentValue = null;
         } catch (Exception e) {
             System.out.println("Error parsing data file: " + e.getMessage());
         } finally {
@@ -129,6 +148,28 @@ public class JobAssignmentFinder {
         return benefitMatrix;
     }
 
+    // Please ignore this, I kept this here for my own testing purposes
+    // /**
+    //  * determineResult:             determines the highest value permutation and value simultaneously.
+    //  */
+    // private void determineResult() {
+    //     int maxVal = 0;
+    //     ArrayList<Integer> solPerm = new ArrayList<>();
+    //     for (ArrayList<Integer> permutation : jobAssignmentPerms) {
+    //         int temp = 0;
+    //         for (int i = 0; i < permutation.size(); i++) {
+    //             temp += benefitMatrix[i][permutation.get(i)];
+    //         }
+    //         if (temp > maxVal) {
+    //             maxVal = temp;
+    //             solPerm = permutation;
+    //         }
+
+    //     }
+    //     maxJobAsssignmentValue = maxVal;
+    //     maxJobAssignmentPermutation = solPerm;
+    // }
+
     /**
      * benefitMatrixToString:       returns the benefit matrix as a string.
      * 
@@ -151,7 +192,7 @@ public class JobAssignmentFinder {
     }
 
     /**
-     * getBenefit:                  Benefit for assigning a person to a job.
+     * getBenefit:                  Benefit for assigning a person n to a job m.
      * 
      * @param n     number of a person
      * @param m     number of a job
@@ -162,47 +203,52 @@ public class JobAssignmentFinder {
     }
 
     /**
-     * getMaxAssignmentTotalValue:  returns the value of a job assignment.
+     * getMaxAssignmentTotalValue:  returns the max value from all the possible job assignments.
      * 
      * @return
      */
     public int getMaxAssignmentTotalValue() {
-        return 0;
+        // if (maxJobAsssignmentValue == null || maxJobAssignmentPermutation == null)
+        //     determineResult();
+        // return maxJobAsssignmentValue;
+        int maxVal = 0;
+        // ArrayList<Integer> solPerm = new ArrayList<>();
+        for (ArrayList<Integer> permutation : jobAssignmentPerms) {
+            int temp = 0;
+            for (int i = 0; i < permutation.size(); i++) {
+                temp += benefitMatrix[i][permutation.get(i)];
+            }
+            if (temp > maxVal) {
+                maxVal = temp;
+                // solPerm = permutation;
+            }
+        }
+        return maxVal;
     }
 
     /**
-     * getMaxAssignment:            returns the permutation which represents\
+     * getMaxAssignment:            returns the permutation which represents the maximum possible job value.
      * 
      * the maximum possible job value.
      * 
      * @return
      */
     public ArrayList<Integer> getMaxAssignment() {
-        return null;
-    }
-
-    public static void main(String[] args) {
-        JobAssignmentFinder jf = new JobAssignmentFinder();
-        try {
-            jf.readDataFile("data0.txt");
-            System.out.println(jf.getInputSize());
-            System.out.println(jf.benefitMatrixToString());
-            // jf.readDataFile("data1.txt");
-            // System.out.println(jf.getInputSize());
-            // System.out.println(jf.benefitMatrixToString());
-            // jf.readDataFile("data2.txt");
-            // System.out.println(jf.getInputSize());
-            // System.out.println(jf.benefitMatrixToString());
-            // jf.readDataFile("data3.txt");
-            // System.out.println(jf.getInputSize());
-            // System.out.println(jf.benefitMatrixToString());
-            // jf.readDataFile("data4.txt");
-            // System.out.println(jf.getInputSize());
-            // System.out.println(jf.benefitMatrixToString());
-            // jf.readDataFile("data5.txt");
-            // System.out.println(jf.getInputSize());
-            // System.out.println(jf.benefitMatrixToString());
-        } catch (FileNotFoundException e) {
+        // if (maxJobAsssignmentValue == null || maxJobAssignmentPermutation == null)
+        //     determineResult();
+        // return maxJobAssignmentPermutation;
+        int maxVal = 0;
+        ArrayList<Integer> solPerm = new ArrayList<>();
+        for (ArrayList<Integer> permutation : jobAssignmentPerms) {
+            int temp = 0;
+            for (int i = 0; i < permutation.size(); i++) {
+                temp += benefitMatrix[i][permutation.get(i)];
+            }
+            if (temp > maxVal) {
+                maxVal = temp;
+                solPerm = permutation;
+            }
         }
+        return solPerm;
     }
 }
